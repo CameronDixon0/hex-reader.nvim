@@ -146,4 +146,6 @@ end
 
 function M.toggle()
   if isOpen then M.close() else M.open() end
+end
+
 return M
