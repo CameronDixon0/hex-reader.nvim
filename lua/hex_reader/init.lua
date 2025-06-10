@@ -139,4 +139,9 @@ function M.open()
   isOpen = true
 end
 
+function M.close()
+  vim.cmd('%!xxd -r')
+  isOpen = false
+end
+
 return M
