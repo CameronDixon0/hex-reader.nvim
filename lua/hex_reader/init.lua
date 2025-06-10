@@ -39,6 +39,11 @@ function M.show()
   local ns_id = vim.api.nvim_create_namespace("hex_reader")
   local bufnr = vim.api.nvim_get_current_buf()
 
+  read_next_8_bytes()
+  convert()
+
+  vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
+
   vim.api.nvim_buf_set_extmark(bufnr, ns_id, 0, -1, {
     virt_text = { { string.format("uint8: %s", values.uint8), "Comment" } },
     virt_text_pos = "eol", -- put it at the end of the line
