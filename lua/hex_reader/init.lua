@@ -50,6 +50,25 @@ end
 
 -- Decode all types
 function M.convert()
+  local function to_number(bytes)
+    return string.char(unpack(vim.tbl_map(function(b)
+      return tonumber(b, 16)
+    end, bytes)))
+  end
+
+  local float32 = nil
+  local float64 = nil
+
+  if #last_bytes >= 4 then
+    local str4 = to_number({ unpack(last_bytes, 1, 4) })
+    float32 = string.unpack("<f", str4)  -- little-endian float
+  end
+
+  if #last_bytes >= 8 then
+    local str8 = to_number({ unpack(last_bytes, 1, 8) })
+    float64 = string.unpack("<d", str8)  -- little-endian double
+  end
+
   values = {
     uint8  = bytes_to_int({ last_bytes[1] }, false),
     int8   = bytes_to_int({ last_bytes[1] }, true),
@@ -61,6 +80,8 @@ function M.convert()
     int32  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, true),
     uint64 = bytes_to_int({ unpack(last_bytes, 1, 8) }, false),
     int64  = bytes_to_int({ unpack(last_bytes, 1, 8) }, true),
+    float32 = float32,
+    float64 = float64,
   }
 end
 
@@ -74,7 +95,10 @@ function M.show()
 
   vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
 
-  local display_keys = { "uint8", "int8", "uint16", "int16", "uint24", "int24", "uint32", "int32", "uint64", "int64" }
+  local display_keys = {
+    "uint8", "int8", "uint16", "int16", "uint24", "int24",
+    "uint32", "int32", "uint64", "int64", "float32", "float64"
+  }
 
   for i, key in ipairs(display_keys) do
     local value = values[key]
