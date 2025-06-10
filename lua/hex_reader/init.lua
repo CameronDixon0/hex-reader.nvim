@@ -48,6 +48,10 @@ function M.show()
     virt_text = { { string.format("uint8: %s", values.uint8), "Comment" } },
     virt_text_pos = "eol", -- put it at the end of the line
   })
+  vim.api.nvim_buf_set_extmark(bufnr, ns_id, 0, -1, {
+    virt_text = { { string.format("int8: %s", values.int8), "Comment" } },
+    virt_text_pos = "eol", -- put it at the end of the line
+  })
 end
 
 function M.open()
