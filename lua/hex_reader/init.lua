@@ -28,7 +28,7 @@ function M.read_next_8_bytes()
 end
 
 function M.convert(bytes)
-  local byte = tonumber(bytes[1], 16)
+  local byte = tonumber(last_bytes[1], 16)
   values = {
     uint8 = byte,
     int8 = byte > 127 and byte - 256 or byte,
