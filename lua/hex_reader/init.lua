@@ -3,6 +3,8 @@ local M = {}
 local last_bytes = {}
 local values = {}
 
+local isOpen = false
+
 function M.setup()
   vim.api.nvim_create_augroup("HexReaderCursor", { clear = true })
 
@@ -108,6 +110,7 @@ end
 
 -- Display values as virtual text
 function M.show()
+  if not isOpen then return
   local ns_id = vim.api.nvim_create_namespace("hex_reader")
   local bufnr = vim.api.nvim_get_current_buf()
 
@@ -133,6 +136,7 @@ end
 -- Open in hex mode
 function M.open()
   vim.cmd('%!xxd -g 1')
+  isOpen = true
 end
 
 return M
