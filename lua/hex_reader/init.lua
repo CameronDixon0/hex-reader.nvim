@@ -3,6 +3,17 @@ local M = {}
 local last_bytes = {}
 local values = {}
 
+function M.setup()
+  vim.api.nvim_create_augroup("HexReaderCursor", { clear = true })
+
+  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+    group = "HexReaderCursor",
+    pattern = "*",
+    callback = function()
+      require("hex_reader").show()
+    end,
+  })
+end
 -- Read 8 bytes under cursor
 function M.read_next_8_bytes()
   local row, col = unpack(vim.api.nvim_win_get_cursor(0))
