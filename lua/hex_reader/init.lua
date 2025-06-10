@@ -39,8 +39,7 @@ function M.read_next_8_bytes()
 end
 
 function M.open()
-  -- run :%!xxd -g 2
-  vim.cmd('%!xxd -g 2')
+  vim.cmd('%!xxd -g 1')
 
   -- create a new namespace for your plugin's virtual text
   local ns_id = vim.api.nvim_create_namespace("hex_reader")
