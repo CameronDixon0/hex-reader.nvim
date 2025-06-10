@@ -135,7 +135,7 @@ end
 
 -- Open in hex mode
 function M.open()
-  vim.cmd('%!xxd -g 1')
+  vim.cmd('%!xxd -g 1 -u')
   isOpen = true
 end
 
@@ -144,4 +144,6 @@ function M.close()
   isOpen = false
 end
 
+function M.toggle()
+  if isOpen then M.close() else M.open() end
 return M
