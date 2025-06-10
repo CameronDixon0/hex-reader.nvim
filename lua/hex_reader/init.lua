@@ -48,38 +48,41 @@ local function bytes_to_int(bytes, signed)
   return val
 end
 
--- Decode all types
+local ffi = require("ffi")
+
 function M.convert()
-  local function to_number(bytes)
+  local function to_bytes(bytes)
     return string.char(unpack(vim.tbl_map(function(b)
       return tonumber(b, 16)
     end, bytes)))
   end
 
-  local float32 = nil
-  local float64 = nil
+  local float32, float64
 
   if #last_bytes >= 4 then
-    local str4 = to_number({ unpack(last_bytes, 1, 4) })
-    float32 = unpack("<f", str4)  -- little-endian float
+    local str4 = to_bytes({ unpack(last_bytes, 1, 4) })
+    ffi.cdef[[
+      typedef union { float f; uint8_t b[4]; } FloatUnion;
+    ]]
+    local fu = ffi.new("FloatUnion")
+    ffi.copy(fu.b, str4, 4)
+    float32 = fu.f
   end
 
   if #last_bytes >= 8 then
-    local str8 = to_number({ unpack(last_bytes, 1, 8) })
-    float64 = unpack("<d", str8)  -- little-endian double
+    local str8 = to_bytes({ unpack(last_bytes, 1, 8) })
+    ffi.cdef[[
+      typedef union { double d; uint8_t b[8]; } DoubleUnion;
+    ]]
+    local du = ffi.new("DoubleUnion")
+    ffi.copy(du.b, str8, 8)
+    float64 = du.d
   end
 
+  local byte = tonumber(last_bytes[1], 16)
   values = {
-    uint8  = bytes_to_int({ last_bytes[1] }, false),
-    int8   = bytes_to_int({ last_bytes[1] }, true),
-    uint16 = bytes_to_int({ last_bytes[1], last_bytes[2] }, false),
-    int16  = bytes_to_int({ last_bytes[1], last_bytes[2] }, true),
-    uint24 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, false),
-    int24  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, true),
-    uint32 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, false),
-    int32  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, true),
-    uint64 = bytes_to_int({ unpack(last_bytes, 1, 8) }, false),
-    int64  = bytes_to_int({ unpack(last_bytes, 1, 8) }, true),
+    uint8 = byte,
+    int8 = byte > 127 and byte - 256 or byte,
     float32 = float32,
     float64 = float64,
   }
