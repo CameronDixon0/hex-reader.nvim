@@ -39,8 +39,8 @@ function M.show()
   local ns_id = vim.api.nvim_create_namespace("hex_reader")
   local bufnr = vim.api.nvim_get_current_buf()
 
-  read_next_8_bytes()
-  convert()
+  M.read_next_8_bytes()
+  M.convert()
 
   vim.api.nvim_buf_clear_namespace(bufnr, ns_id, 0, -1)
 
