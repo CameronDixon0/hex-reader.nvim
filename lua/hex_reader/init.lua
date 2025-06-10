@@ -79,10 +79,17 @@ function M.convert()
     float64 = du.d
   end
 
-  local byte = tonumber(last_bytes[1], 16)
   values = {
-    uint8 = byte,
-    int8 = byte > 127 and byte - 256 or byte,
+    uint8  = bytes_to_int({ last_bytes[1] }, false),
+    int8   = bytes_to_int({ last_bytes[1] }, true),
+    uint16 = bytes_to_int({ last_bytes[1], last_bytes[2] }, false),
+    int16  = bytes_to_int({ last_bytes[1], last_bytes[2] }, true),
+    uint24 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, false),
+    int24  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, true),
+    uint32 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, false),
+    int32  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, true),
+    uint64 = bytes_to_int({ unpack(last_bytes, 1, 8) }, false),
+    int64  = bytes_to_int({ unpack(last_bytes, 1, 8) }, true),
     float32 = float32,
     float64 = float64,
   }
