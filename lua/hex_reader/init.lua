@@ -61,12 +61,12 @@ function M.convert()
 
   if #last_bytes >= 4 then
     local str4 = to_number({ unpack(last_bytes, 1, 4) })
-    float32 = string.unpack("<f", str4)  -- little-endian float
+    float32 = unpack("<f", str4)  -- little-endian float
   end
 
   if #last_bytes >= 8 then
     local str8 = to_number({ unpack(last_bytes, 1, 8) })
-    float64 = string.unpack("<d", str8)  -- little-endian double
+    float64 = unpack("<d", str8)  -- little-endian double
   end
 
   values = {
