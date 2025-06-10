@@ -42,6 +42,14 @@ use {
 3. Move the cursor over any byte. The plugin will display the interpretation of the next 8 bytes as various types in virtual text.
 4. To return to normal view, run `:lua require('hex_reader').close()`.
 
+You can also set up a convenient keymap to toggle hex view:
+
+```lua
+vim.keymap.set("n", "<leader>hx", function()
+  require("hex_reader").toggle()
+end, { desc = "Toggle hex reader." })
+```
+
 ### Example
 
 ![hex-reader.nvim demo](https://raw.githubusercontent.com/camerondixon/hex-reader.nvim/main/demo.gif)

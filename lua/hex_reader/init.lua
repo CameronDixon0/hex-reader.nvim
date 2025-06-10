@@ -3,7 +3,7 @@ local M = {}
 local last_bytes = {}
 local values = {}
 
-local isOpen = false
+M.isOpen = false
 
 function M.setup()
   vim.api.nvim_create_augroup("HexReaderCursor", { clear = true })
@@ -136,16 +136,16 @@ end
 -- Open in hex mode
 function M.open()
   vim.cmd('%!xxd -g 1 -u')
-  isOpen = true
+  M.isOpen = true
 end
 
 function M.close()
   vim.cmd('%!xxd -r')
-  isOpen = false
+  M.isOpen = false
 end
 
 function M.toggle()
-  if isOpen then M.close() else M.open() end
+  if M.isOpen then M.close() else M.open() end
 end
 
 return M
