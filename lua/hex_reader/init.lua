@@ -168,6 +168,7 @@ end
 function M.toggle_endianness()
   M.littleEndian = not M.littleEndian
   vim.notify("Endianness set to " .. (M.littleEndian and "little" or "big"), vim.log.levels.INFO)
+  M.show()
 end
 
 return M
