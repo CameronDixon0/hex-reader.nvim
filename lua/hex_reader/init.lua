@@ -165,7 +165,7 @@ function M.toggle()
   if M.isOpen then M.close() else M.open() end
 end
 
-function toggle_endianness()
+function M.toggle_endianness()
   M.littleEndian = not M.littleEndian
   vim.notify("Endianness set to " .. (M.littleEndian and "little" or "big"), vim.log.levels.INFO)
 end
