@@ -110,7 +110,7 @@ end
 
 -- Display values as virtual text
 function M.show()
-  if not isOpen then return end
+  if not M.isOpen then return end
   local ns_id = vim.api.nvim_create_namespace("hex_reader")
   local bufnr = vim.api.nvim_get_current_buf()
 
