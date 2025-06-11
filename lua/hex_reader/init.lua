@@ -4,6 +4,7 @@ local last_bytes = {}
 local values = {}
 
 M.isOpen = false
+M.littleEndian = true
 
 function M.setup()
   vim.api.nvim_create_augroup("HexReaderCursor", { clear = true })
@@ -70,10 +71,22 @@ function M.convert()
     end, bytes)))
   end
 
+  -- Helper to reorder bytes based on endianness
+  local function order_bytes(bytes, n)
+    local b = { unpack(bytes, 1, n) }
+    if not M.littleEndian then
+      -- Big endian: reverse order
+      for i = 1, math.floor(#b / 2) do
+        b[i], b[#b - i + 1] = b[#b - i + 1], b[i]
+      end
+    end
+    return b
+  end
+
   local float32, float64
 
   if #last_bytes >= 4 then
-    local str4 = to_bytes({ unpack(last_bytes, 1, 4) })
+    local str4 = to_bytes(order_bytes(last_bytes, 4))
     ffi.cdef[[
       typedef union { float f; uint8_t b[4]; } FloatUnion;
     ]]
@@ -131,6 +144,10 @@ function M.show()
       virt_text_pos = "eol",
     })
   end
+  vim.api.nvim_buf_set_extmark(bufnr, ns_id, #display_keys, -1, {
+    virt_text = { { "Mode: " .. (M.littleEndian and "Little endian" or "Big endian"), "Comment" } },
+    virt_text_pos = "eol",
+  })
 end
 
 -- Open in hex mode
@@ -146,6 +163,11 @@ end
 
 function M.toggle()
   if M.isOpen then M.close() else M.open() end
+end
+
+function toggle_endianness()
+  M.littleEndian = not M.littleEndian
+  vim.notify("Endianness set to " .. (M.littleEndian and "little" or "big"), vim.log.levels.INFO)
 end
 
 return M
