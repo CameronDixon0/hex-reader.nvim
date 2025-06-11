@@ -96,7 +96,7 @@ function M.convert()
   end
 
   if #last_bytes >= 8 then
-    local str8 = to_bytes({ unpack(last_bytes, 1, 8) })
+    local str8 = to_bytes(order_bytes(last_bytes, 8))
     ffi.cdef[[
       typedef union { double d; uint8_t b[8]; } DoubleUnion;
     ]]
@@ -106,16 +106,16 @@ function M.convert()
   end
 
   values = {
-    uint8  = bytes_to_int({ last_bytes[1] }, false),
-    int8   = bytes_to_int({ last_bytes[1] }, true),
-    uint16 = bytes_to_int({ last_bytes[1], last_bytes[2] }, false),
-    int16  = bytes_to_int({ last_bytes[1], last_bytes[2] }, true),
-    uint24 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, false),
-    int24  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3] }, true),
-    uint32 = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, false),
-    int32  = bytes_to_int({ last_bytes[1], last_bytes[2], last_bytes[3], last_bytes[4] }, true),
-    uint64 = bytes_to_int({ unpack(last_bytes, 1, 8) }, false),
-    int64  = bytes_to_int({ unpack(last_bytes, 1, 8) }, true),
+    uint8  = bytes_to_int(order_bytes(last_bytes, 1), false),
+    int8   = bytes_to_int(order_bytes(last_bytes, 1), true),
+    uint16 = bytes_to_int(order_bytes(last_bytes, 2), false),
+    int16  = bytes_to_int(order_bytes(last_bytes, 2), true),
+    uint24 = bytes_to_int(order_bytes(last_bytes, 3), false),
+    int24  = bytes_to_int(order_bytes(last_bytes, 3), true),
+    uint32 = bytes_to_int(order_bytes(last_bytes, 4), false),
+    int32  = bytes_to_int(order_bytes(last_bytes, 4), true),
+    uint64 = bytes_to_int(order_bytes(last_bytes, 8), false),
+    int64  = bytes_to_int(order_bytes(last_bytes, 8), true),
     float32 = float32,
     float64 = float64,
   }
