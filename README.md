@@ -52,7 +52,8 @@ end, { desc = "Toggle hex reader." })
 
 ### Example
 
-![hex-reader.nvim demo](https://raw.githubusercontent.com/camerondixon/hex-reader.nvim/main/demo.gif)
+![demo](https://github.com/user-attachments/assets/69ea3211-b828-40ba-be95-d0249f3aec76)
+
 
 ## API
 
